@@ -2656,11 +2656,30 @@
                 return;
             }
 
-            // Calculate percentage
-            var clientRect = plyr.progress.container.getBoundingClientRect(),
-                percent = 0,
-                visible = config.classes.tooltip + '--visible';
 
+            // Calculate percentage
+            var clientRect    = plyr.progress.container.getBoundingClientRect();
+
+
+            //http://www.christophercurrie.com/technology/2014/03/20/internet-explorer-11-fullscreen-bug.html
+            var newClientRect = {},
+                width   = plyr.progress.container.offsetWidth  || -1,
+                height  = plyr.progress.container.offsetHeight || -1;
+
+            // not normal(width > clientWidth or height > clientHeight)
+            if(width < plyr.progress.container.clientWidth || height < plyr.progress.container.clientHeight) {
+
+              for (var key in clientRect) {
+                newClientRect[key] = clientRect[key] * 100;
+              }
+              clientRect = newClientRect;
+            }
+
+
+            var percent = 0,
+                visible = config.classes.tooltip + '--visible';
+            
+            
             // Determine percentage, if already visible
             if (!event) {
                 if (_hasClass(plyr.progress.tooltip, visible)) {
